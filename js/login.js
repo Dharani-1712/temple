@@ -60,7 +60,8 @@ loginForm.addEventListener("submit", async (e) => {
     await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
     showToast("Welcome back! Redirecting…", "success");
     setTimeout(() => {
-      window.location.href = "../pages/dashboard.html";
+      const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
+      window.location.href = base + '/pages/dashboard.html';
     }, 800);
   } catch (err) {
     showSpinner(false);
@@ -90,7 +91,8 @@ if (googleBtn) {
       await signInWithPopup(auth, googleProvider);
       showToast("Signed in with Google! Redirecting…", "success");
       setTimeout(() => {
-        window.location.href = "../pages/dashboard.html";
+        const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
+        window.location.href = base + '/pages/dashboard.html';
       }, 800);
     } catch (err) {
       showSpinner(false);

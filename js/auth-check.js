@@ -37,7 +37,9 @@ export function requireAuth(callback) {
       showSpinner(false);
       if (callback) callback(user);
     } else {
-      window.location.href = "../login.html";
+      // Redirect to login — works on both localhost and GitHub Pages
+      const base = window.location.pathname.replace(/\/pages\/.*$/, '');
+      window.location.href = base + '/login.html';
     }
   });
 }
@@ -46,7 +48,9 @@ export function requireAuth(callback) {
 export function redirectIfLoggedIn(redirectTo = "dashboard.html") {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      window.location.href = `../pages/${redirectTo}`;
+      // Build correct path for GitHub Pages (/temple/pages/dashboard.html)
+      const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
+      window.location.href = base + '/pages/' + redirectTo;
     } else {
       showSpinner(false);
     }

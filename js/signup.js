@@ -74,7 +74,8 @@ signupForm.addEventListener("submit", async (e) => {
     await updateProfile(cred.user, { displayName: nameInput.value.trim() });
     showToast("Account created! Welcome to Temple Darshan 🙏", "success");
     setTimeout(() => {
-      window.location.href = "../pages/dashboard.html";
+      const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
+      window.location.href = base + '/pages/dashboard.html';
     }, 1000);
   } catch (err) {
     showSpinner(false);
@@ -104,7 +105,8 @@ if (googleBtn) {
       await signInWithPopup(auth, googleProvider);
       showToast("Account ready! Welcome to Temple Darshan 🙏", "success");
       setTimeout(() => {
-        window.location.href = "../pages/dashboard.html";
+        const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
+        window.location.href = base + '/pages/dashboard.html';
       }, 1000);
     } catch (err) {
       showSpinner(false);
