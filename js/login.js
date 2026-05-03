@@ -60,8 +60,7 @@ loginForm.addEventListener("submit", async (e) => {
     await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
     showToast("Welcome back! Redirecting…", "success");
     setTimeout(() => {
-      const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
-      window.location.href = base + '/pages/dashboard.html';
+      window.location.href = 'https://dharani-1712.github.io/temple/pages/dashboard.html';
     }, 800);
   } catch (err) {
     showSpinner(false);
@@ -91,8 +90,7 @@ if (googleBtn) {
       await signInWithPopup(auth, googleProvider);
       showToast("Signed in with Google! Redirecting…", "success");
       setTimeout(() => {
-        const base = window.location.pathname.replace(/\/[^/]+\.html$/, '');
-        window.location.href = base + '/pages/dashboard.html';
+        window.location.href = 'https://dharani-1712.github.io/temple/pages/dashboard.html';
       }, 800);
     } catch (err) {
       showSpinner(false);
