@@ -335,6 +335,12 @@
       <!-- Main content -->
       <div id="payModalContent">
         <div class="modal-body">
+          <!-- Razorpay notice -->
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(232,131,26,0.07);border:1px solid rgba(232,131,26,0.2);border-radius:10px;padding:10px 14px;margin-bottom:1.2rem;">
+            <span style="font-size:1.3rem;">🔒</span>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">100% secure payment powered by <strong style="color:#0d5ef5;">Razorpay</strong>. Supports UPI, Cards, Net Banking &amp; Wallets.</p>
+          </div>
+
           <!-- Order Summary -->
           <div class="pay-summary">
             <div class="row"><span class="lbl">Temple</span><span class="val" id="payTempleName">—</span></div>
@@ -344,72 +350,15 @@
             <div class="row total"><span class="lbl">Total Amount</span><span class="val" id="payAmount">—</span></div>
           </div>
 
-          <!-- Payment Tabs -->
-          <div class="pay-tabs">
-            <button class="pay-tab active" id="tabUpi" onclick="switchTab('upi')">📱 UPI</button>
-            <button class="pay-tab" id="tabCard" onclick="switchTab('card')">💳 Card</button>
-            <button class="pay-tab" id="tabNetbank" onclick="switchTab('netbank')">🏦 Net Banking</button>
-          </div>
-
-          <!-- UPI Panel -->
-          <div class="pay-panel active" id="panelUpi">
-            <div class="upi-apps">
-              <button class="upi-app-btn" onclick="selectUpiApp(this,'GPay')"><span class="upi-icon">🔵</span>GPay</button>
-              <button class="upi-app-btn" onclick="selectUpiApp(this,'PhonePe')"><span class="upi-icon">🟣</span>PhonePe</button>
-              <button class="upi-app-btn" onclick="selectUpiApp(this,'Paytm')"><span class="upi-icon">🔷</span>Paytm</button>
-              <button class="upi-app-btn" onclick="selectUpiApp(this,'BHIM')"><span class="upi-icon">🟠</span>BHIM</button>
-            </div>
-            <div class="form-group">
-              <label for="upiId" style="font-size:0.85rem;">Or enter UPI ID</label>
-              <input type="text" id="upiId" class="form-control" placeholder="yourname@upi" />
-            </div>
-          </div>
-
-          <!-- Card Panel -->
-          <div class="pay-panel" id="panelCard">
-            <div class="card-visual">
-              <div class="chip">💳</div>
-              <div class="card-number" id="cardNumberDisplay">•••• •••• •••• ••••</div>
-              <div class="card-footer">
-                <span id="cardNameDisplay">CARD HOLDER</span>
-                <span id="cardExpiryDisplay">MM/YY</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label style="font-size:0.85rem;">Card Number</label>
-              <input type="text" id="cardNumber" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)" />
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="form-group">
-                <label style="font-size:0.85rem;">Expiry</label>
-                <input type="text" id="cardExpiry" class="form-control" placeholder="MM/YY" maxlength="5" oninput="fmtExpiry(this)" />
-              </div>
-              <div class="form-group">
-                <label style="font-size:0.85rem;">CVV</label>
-                <input type="password" id="cardCvv" class="form-control" placeholder="•••" maxlength="3" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label style="font-size:0.85rem;">Name on Card</label>
-              <input type="text" id="cardName" class="form-control" placeholder="Full Name" oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'CARD HOLDER'" />
-            </div>
-          </div>
-
-          <!-- Net Banking Panel -->
-          <div class="pay-panel" id="panelNetbank">
-            <div class="bank-list">
-              <button class="bank-btn" onclick="selectBank(this,'SBI')">🏛️ SBI</button>
-              <button class="bank-btn" onclick="selectBank(this,'HDFC')">🏦 HDFC</button>
-              <button class="bank-btn" onclick="selectBank(this,'ICICI')">🏧 ICICI</button>
-              <button class="bank-btn" onclick="selectBank(this,'Axis')">🔶 Axis Bank</button>
-              <button class="bank-btn" onclick="selectBank(this,'Kotak')">💜 Kotak</button>
-              <button class="bank-btn" onclick="selectBank(this,'PNB')">🟦 PNB</button>
-            </div>
-          </div>
-
-          <button class="pay-now-btn" id="payNowBtn" onclick="processPayment()">
-            🔒 Pay &amp; Get Ticket
+          <!-- Razorpay Button -->
+          <button class="pay-now-btn" id="payNowBtn" onclick="openRazorpay()">
+            <img src="https://razorpay.com/favicon.ico" style="width:18px;height:18px;border-radius:4px;" alt="" />
+            Pay with Razorpay
           </button>
+
+          <p style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:10px;">
+            🔐 256-bit SSL encrypted &nbsp;|&nbsp; All payment methods accepted
+          </p>
         </div>
       </div>
 
@@ -557,20 +506,29 @@
     </div>
   </footer>
 
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
   <script>
     document.getElementById("hamburger").addEventListener("click", () => {
       document.getElementById("navMenu").classList.toggle("open");
     });
 
-    // ===== Payment Modal Logic =====
-    let selectedUpiApp = null;
-    let selectedBankName = null;
-    let pendingBooking = null;
-    const PRICE_PER_DEVOTEE = 51; // ₹51 per devotee
+    // =============================================
+    // 🔑 RAZORPAY CONFIGURATION
+    // Replace the value below with your Razorpay Key ID
+    // Get it from: https://dashboard.razorpay.com → Settings → API Keys
+    // =============================================
+    const RAZORPAY_KEY_ID = 'YOUR_RAZORPAY_KEY_ID'; // ← REPLACE THIS
 
-    // Called from booking.js via window.openPaymentModal
+    const PRICE_PER_DEVOTEE = 51; // ₹51 per devotee
+    let pendingBooking = null;
+    let paymentStarted = false; // Prevent bypass
+
+    // Called from booking.js
     window.openPaymentModal = function(booking) {
       pendingBooking = booking;
+      paymentStarted = false;
       const devotees = booking.devotees;
       const total = devotees * PRICE_PER_DEVOTEE;
 
@@ -579,99 +537,105 @@
       document.getElementById('paySlot').textContent = booking.slot.time + ' – ' + booking.slot.label;
       document.getElementById('payDevotees').textContent = devotees + (devotees > 1 ? ' Persons' : ' Person');
       document.getElementById('payAmount').textContent = '₹' + total.toLocaleString('en-IN');
-      document.getElementById('payNowBtn').textContent = '🔒 Pay ₹' + total.toLocaleString('en-IN') + ' & Get Ticket';
+      document.getElementById('payNowBtn').innerHTML =
+        '<img src="https://razorpay.com/favicon.ico" style="width:18px;height:18px;border-radius:4px;"> Pay ₹' + total.toLocaleString('en-IN') + ' with Razorpay';
 
-      // Reset state
+      // Reset overlays
       document.getElementById('payModalContent').style.display = 'block';
       document.getElementById('processingOverlay').classList.remove('active');
       document.getElementById('successOverlay').classList.remove('active');
-      switchTab('upi');
-      selectedUpiApp = null;
-      selectedBankName = null;
-      document.getElementById('upiId').value = '';
 
       document.getElementById('paymentModal').classList.add('active');
     };
 
+    // Close only allowed BEFORE payment starts
     document.getElementById('closePayModal').addEventListener('click', () => {
+      if (paymentStarted) {
+        alert('Payment is in progress. Please complete or cancel the payment window.');
+        return;
+      }
+      // Cancel the booking entirely
+      pendingBooking = null;
       document.getElementById('paymentModal').classList.remove('active');
     });
 
-    function switchTab(tab) {
-      ['upi','card','netbank'].forEach(t => {
-        document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
-        document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
-      });
-    }
+    // Prevent closing by clicking backdrop
+    document.getElementById('paymentModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('paymentModal') && !paymentStarted) {
+        pendingBooking = null;
+        document.getElementById('paymentModal').classList.remove('active');
+      }
+    });
 
-    function selectUpiApp(btn, app) {
-      document.querySelectorAll('.upi-app-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedUpiApp = app;
-      document.getElementById('upiId').value = '';
-    }
+    function openRazorpay() {
+      if (!pendingBooking) return;
 
-    function selectBank(btn, bank) {
-      document.querySelectorAll('.bank-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedBankName = bank;
-    }
-
-    function fmtCard(input) {
-      let val = input.value.replace(/\D/g,'').substring(0,16);
-      input.value = val.replace(/(\d{4})/g,'$1 ').trim();
-      document.getElementById('cardNumberDisplay').textContent =
-        (val + '•'.repeat(16 - val.length)).replace(/(\d{4}|•{4})/g,'$1 ').trim();
-    }
-
-    function fmtExpiry(input) {
-      let val = input.value.replace(/\D/g,'').substring(0,4);
-      if (val.length > 2) val = val.slice(0,2) + '/' + val.slice(2);
-      input.value = val;
-      document.getElementById('cardExpiryDisplay').textContent = val || 'MM/YY';
-    }
-
-    function processPayment() {
-      // Minimal validation
-      const activeTab = document.querySelector('.pay-tab.active').id;
-      if (activeTab === 'tabUpi') {
-        const upiId = document.getElementById('upiId').value.trim();
-        if (!selectedUpiApp && !upiId) {
-          alert('Please select a UPI app or enter your UPI ID.');
-          return;
-        }
-      } else if (activeTab === 'tabCard') {
-        const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
-        const exp = document.getElementById('cardExpiry').value;
-        const cvv = document.getElementById('cardCvv').value;
-        if (num.length < 16 || exp.length < 5 || cvv.length < 3) {
-          alert('Please fill in all card details correctly.');
-          return;
-        }
-      } else {
-        if (!selectedBankName) {
-          alert('Please select a bank to proceed.');
-          return;
-        }
+      if (RAZORPAY_KEY_ID === 'YOUR_RAZORPAY_KEY_ID') {
+        alert('⚠️ Razorpay Key ID not set!\n\nTo receive real payments:\n1. Sign up at razorpay.com\n2. Go to Settings → API Keys\n3. Copy your Key ID\n4. Replace YOUR_RAZORPAY_KEY_ID in booking.html');
+        return;
       }
 
-      // Show processing
-      document.getElementById('payModalContent').style.display = 'none';
-      document.getElementById('processingOverlay').classList.add('active');
+      paymentStarted = true;
+      const devotees = pendingBooking.devotees;
+      const totalPaise = devotees * PRICE_PER_DEVOTEE * 100; // Razorpay uses paise
 
-      setTimeout(() => {
-        document.getElementById('processingOverlay').classList.remove('active');
-        document.getElementById('successOverlay').classList.add('active');
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: totalPaise,
+        currency: 'INR',
+        name: 'Temple Darshan',
+        description: 'Darshan at ' + pendingBooking.templeName,
+        image: 'https://dharani-1712.github.io/temple/favicon.ico',
+        prefill: {
+          name: pendingBooking.userName,
+          email: pendingBooking.userEmail,
+        },
+        notes: {
+          temple: pendingBooking.templeName,
+          date: pendingBooking.date,
+          slot: pendingBooking.slot.time,
+          devotees: devotees,
+          bookingId: pendingBooking.bookingId
+        },
+        theme: { color: '#7b1c1c' },
+        modal: {
+          backdropclose: false,
+          escape: false,
+          ondismiss: function() {
+            // User closed Razorpay without paying
+            paymentStarted = false;
+            document.getElementById('payNowBtn').disabled = false;
+            document.getElementById('payNowBtn').innerHTML =
+              '<img src="https://razorpay.com/favicon.ico" style="width:18px;height:18px;border-radius:4px;"> Pay ₹' +
+              (devotees * PRICE_PER_DEVOTEE).toLocaleString('en-IN') + ' with Razorpay';
+          }
+        },
+        handler: function(response) {
+          // ✅ Payment SUCCESS — response.razorpay_payment_id is the real payment ID
+          paymentStarted = false;
 
-        setTimeout(() => {
-          // Save booking and navigate
-          const existing = JSON.parse(localStorage.getItem('templeBookings') || '[]');
-          existing.push(pendingBooking);
-          localStorage.setItem('templeBookings', JSON.stringify(existing));
-          localStorage.setItem('currentBooking', JSON.stringify(pendingBooking));
-          window.location.href = './ticket.html';
-        }, 1500);
-      }, 2500);
+          // Save payment ID to booking
+          pendingBooking.paymentId = response.razorpay_payment_id;
+          pendingBooking.paidAmount = devotees * PRICE_PER_DEVOTEE;
+          pendingBooking.paymentStatus = 'paid';
+
+          // Show success screen
+          document.getElementById('payModalContent').style.display = 'none';
+          document.getElementById('successOverlay').classList.add('active')
+
+          // Save booking ONLY after successful payment
+          setTimeout(() => {
+            const existing = JSON.parse(localStorage.getItem('templeBookings') || '[]');
+            existing.push(pendingBooking);
+            localStorage.setItem('templeBookings', JSON.stringify(existing));
+            localStorage.setItem('currentBooking', JSON.stringify(pendingBooking));
+            window.location.href = './ticket.html';
+          }, 1800);
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
     }
   </script>
   <script type="module" src="../js/booking.js"></script>
