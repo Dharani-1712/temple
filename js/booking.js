@@ -205,17 +205,11 @@ function setupForm() {
       status: "confirmed"
     };
 
-    // Save to localStorage
-    const existing = JSON.parse(localStorage.getItem("templeBookings") || "[]");
-    existing.push(booking);
-    localStorage.setItem("templeBookings", JSON.stringify(existing));
-
-    // Save current booking for ticket page
-    localStorage.setItem("currentBooking", JSON.stringify(booking));
-
-    showToast("Booking confirmed! 🙏 Generating your ticket…", "success");
-    setTimeout(() => {
-      window.location.href = "./ticket.html";
-    }, 1200);
+    // Open payment modal — ticket is generated AFTER payment
+    if (typeof window.openPaymentModal === "function") {
+      window.openPaymentModal(booking);
+    } else {
+      showToast("Payment gateway not loaded. Please refresh.", "error");
+    }
   });
 }
