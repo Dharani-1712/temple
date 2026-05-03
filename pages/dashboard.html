@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Temple Darshan</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    body { background: var(--cream-dark); }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--maroon), var(--maroon-dark));
+      padding: 3rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .dashboard-header::before {
+      content: 'ॐ';
+      position: absolute;
+      font-size: 25rem;
+      color: rgba(255,255,255,0.04);
+      right: -5%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: serif;
+    }
+    .user-avatar {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--saffron), var(--gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      border: 3px solid rgba(255,255,255,0.2);
+    }
+    .dashboard-header h1 { color: white; font-size: 1.8rem; }
+    .dashboard-header .user-email { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+
+    .stats-section {
+      margin-top: -2.5rem;
+      position: relative;
+      z-index: 10;
+    }
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-warm);
+      border: 1px solid rgba(201,168,76,0.15);
+    }
+    .stat-card .big-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: var(--saffron);
+      line-height: 1;
+    }
+    .stat-card p { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+    .stat-card .stat-icon { font-size: 1.5rem; margin-bottom: 8px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .bookings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .quick-link-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-warm);
+      border: 1px solid rgba(201,168,76,0.15);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .quick-link-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-deep);
+      border-color: rgba(232,131,26,0.3);
+    }
+    .quick-link-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(232,131,26,0.12), rgba(201,168,76,0.15));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .quick-link-card h4 { font-size: 0.95rem; margin-bottom: 2px; }
+    .quick-link-card p { font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <!-- Spinner -->
+  <div class="spinner-overlay" id="spinnerOverlay">
+    <div class="spinner"></div>
+    <p>Loading dashboard…</p>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="../index.html">
+      <div class="brand-icon">🛕</div>
+      Temple Darshan
+    </a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="./dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="./booking.html">Book Darshan</a></li>
+      <li><button id="logoutBtn" class="btn btn-danger btn-sm">Logout</button></li>
+    </ul>
+  </nav>
+
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="container">
+      <div style="display:flex; align-items:center; gap:1rem; position:relative;">
+        <div class="user-avatar" id="userAvatar">D</div>
+        <div>
+          <h1>Jai Shri Ram, <span id="userName">Devotee</span>! 🙏</h1>
+          <p class="user-email" id="userEmail"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-section">
+    <div class="container">
+      <div class="grid-3">
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="big-number" id="totalBookings">0</div>
+          <p>Total Bookings</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="big-number" id="upcomingCount">0</div>
+          <p>Upcoming Darshans</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🛕</div>
+          <div class="big-number" id="templesVisited">0</div>
+          <p>Temples Visited</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <section style="padding: 2.5rem 0 0;">
+    <div class="container">
+      <h3 style="margin-bottom:1rem;">Quick Actions</h3>
+      <div class="quick-links">
+        <a href="./booking.html" class="quick-link-card">
+          <div class="quick-link-icon">📅</div>
+          <div>
+            <h4>Book Darshan</h4>
+            <p class="text-muted">Reserve your slot</p>
+          </div>
+        </a>
+        <a href="./ticket.html" class="quick-link-card">
+          <div class="quick-link-icon">🎟️</div>
+          <div>
+            <h4>View Ticket</h4>
+            <p class="text-muted">Latest booking ticket</p>
+          </div>
+        </a>
+        <a href="../index.html" class="quick-link-card">
+          <div class="quick-link-icon">🛕</div>
+          <div>
+            <h4>Explore Temples</h4>
+            <p class="text-muted">Discover sacred sites</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bookings List -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="section-title">
+        <h2>Your Bookings</h2>
+        <a href="./booking.html" class="btn btn-primary btn-sm">+ New Booking</a>
+      </div>
+      <div class="bookings-grid" id="bookingsList">
+        <!-- Rendered by JS -->
+        <div style="display:flex; justify-content:center; padding:2rem; grid-column:1/-1;">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="om-decoration">ॐ</div>
+      <p class="mt-2" style="font-size:0.85rem;">© 2025 Temple Darshan</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("hamburger").addEventListener("click", () => {
+      document.getElementById("navMenu").classList.toggle("open");
+    });
+  </script>
+  <script type="module" src="../js/dashboard.js"></script>
+</body>
+</html>

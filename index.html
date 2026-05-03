@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temple Darshan — Sacred Journeys Made Easy</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    /* ---- Hero Section ---- */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--cream) 0%, #F5E6C8 40%, #EDD8A8 100%);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 70vmin;
+      height: 70vmin;
+      background: radial-gradient(circle, rgba(232,131,26,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: 'ॐ';
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: min(40vw, 420px);
+      color: var(--gold);
+      opacity: 0.07;
+      font-family: serif;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      animation: fadeInUp 0.8s ease;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232, 131, 26, 0.12);
+      border: 1px solid rgba(232, 131, 26, 0.25);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--saffron-dark);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 { margin-bottom: 1rem; }
+    .hero h1 em { color: var(--saffron); font-style: normal; }
+    .hero p.lead {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* Floating temple illustration */
+    .hero-visual {
+      position: absolute;
+      right: 8%;
+      bottom: 0;
+      z-index: 1;
+      font-size: min(22vw, 260px);
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.85;
+      line-height: 1;
+      filter: drop-shadow(0 20px 40px rgba(120, 60, 10, 0.2));
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    /* ---- Features ---- */
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(232,131,26,0.15), rgba(201,168,76,0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ---- How it works ---- */
+    .steps-line {
+      display: flex;
+      gap: 0;
+      position: relative;
+    }
+    .steps-line::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.6% + 28px);
+      right: calc(16.6% + 28px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--saffron), var(--gold), var(--saffron));
+      opacity: 0.3;
+    }
+    .step-item { flex: 1; text-align: center; padding: 0 1rem; }
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--saffron), var(--saffron-dark));
+      color: white;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 4px 16px rgba(232, 131, 26, 0.35);
+      position: relative;
+      z-index: 1;
+    }
+    .step-item h3 { font-size: 1rem; margin-bottom: 6px; }
+    .step-item p { font-size: 0.85rem; }
+
+    /* Temple showcase */
+    .temple-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .showcase-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-warm);
+      border: 1px solid rgba(201,168,76,0.15);
+      transition: var(--transition);
+    }
+    .showcase-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-deep); }
+    .showcase-thumb {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .showcase-body { padding: 1.25rem; }
+    .showcase-body h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .showcase-body p { font-size: 0.8rem; }
+
+    /* CTA banner */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+      border-radius: var(--radius-lg);
+      padding: 3.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: 'ॐ';
+      position: absolute;
+      font-size: 20rem;
+      color: rgba(255,255,255,0.04);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: serif;
+    }
+    .cta-banner h2 { color: var(--gold-light); position: relative; }
+    .cta-banner p { color: rgba(255,255,255,0.65); position: relative; margin-top: 8px; }
+    .cta-banner .btn-group { position: relative; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+
+    @media (max-width: 900px) {
+      .hero::after { display: none; }
+      .hero-visual { display: none; }
+      .temple-showcase { grid-template-columns: repeat(2, 1fr); }
+      .steps-line { flex-direction: column; gap: 2rem; }
+      .steps-line::before { display: none; }
+    }
+    @media (max-width: 600px) {
+      .temple-showcase { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Spinner -->
+  <div class="spinner-overlay hidden" id="spinnerOverlay">
+    <div class="spinner"></div>
+    <p>Loading…</p>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="./index.html">
+      <div class="brand-icon">🛕</div>
+      Temple Darshan
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="./index.html" class="active">Home</a></li>
+      <li><a href="./pages/booking.html">Book Darshan</a></li>
+      <li><a href="./login.html">Login</a></li>
+      <li><a href="./signup.html"><button class="btn btn-primary btn-sm">Sign Up</button></a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-eyebrow">🙏 &nbsp;Book Sacred Darshans Online</div>
+        <h1>Seek <em>Blessings</em>,<br>Skip the Wait</h1>
+        <p class="lead">Reserve your temple darshan slot in seconds. Access sacred shrines across India — all from the palm of your hand.</p>
+        <div class="hero-cta">
+          <a href="./signup.html" class="btn btn-primary btn-lg">Begin Your Journey</a>
+          <a href="./pages/booking.html" class="btn btn-secondary btn-lg">Explore Temples</a>
+        </div>
+        <div class="stats-row mt-4">
+          <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Sacred Temples</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">2L+</span>
+            <span class="stat-label">Happy Devotees</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">0</span>
+            <span class="stat-label">Queuing Hours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">🛕</div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="section" style="background: var(--cream-dark);">
+    <div class="container">
+      <div class="text-center mb-4">
+        <div class="om-decoration mb-2">— ॐ —</div>
+        <h2>How It Works</h2>
+        <p class="mt-2">Three simple steps to your sacred darshan</p>
+      </div>
+      <div class="steps-line mt-4">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <h3>Create Account</h3>
+          <p>Sign up with your email in under a minute</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <h3>Choose & Book</h3>
+          <p>Pick your temple, date, and preferred time slot</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <h3>Get QR Ticket</h3>
+          <p>Download your ticket and present at the temple gate</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Temples -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2>Sacred Shrines Awaiting</h2>
+        <p class="mt-2">From Himalayan peaks to coastal shores — book darshan at India's holiest temples</p>
+      </div>
+      <div class="temple-showcase">
+        <div class="showcase-card">
+          <div class="showcase-thumb" style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2);">🏛️</div>
+          <div class="showcase-body">
+            <h3>Tirupati Balaji</h3>
+            <p>Tirumala, Andhra Pradesh</p>
+            <span class="badge badge-saffron mt-2">Lord Venkateswara</span>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <div class="showcase-thumb" style="background: linear-gradient(135deg, #E8F5E9, #C8E6C9);">✨</div>
+          <div class="showcase-body">
+            <h3>Golden Temple</h3>
+            <p>Amritsar, Punjab</p>
+            <span class="badge badge-gold mt-2">Waheguru</span>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <div class="showcase-thumb" style="background: linear-gradient(135deg, #EDE7F6, #D1C4E9);">🕉️</div>
+          <div class="showcase-body">
+            <h3>Kashi Vishwanath</h3>
+            <p>Varanasi, Uttar Pradesh</p>
+            <span class="badge badge-saffron mt-2">Lord Shiva</span>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <div class="showcase-thumb" style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB);">⛰️</div>
+          <div class="showcase-body">
+            <h3>Vaishno Devi</h3>
+            <p>Katra, Jammu & Kashmir</p>
+            <span class="badge badge-gold mt-2">Goddess Vaishno Devi</span>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <div class="showcase-thumb" style="background: linear-gradient(135deg, #FBE9E7, #FFCCBC);">🌊</div>
+          <div class="showcase-body">
+            <h3>Somnath Temple</h3>
+            <p>Prabhas Patan, Gujarat</p>
+            <span class="badge badge-saffron mt-2">Lord Shiva</span>
+          </div>
+        </div>
+        <div class="showcase-card">
+          <div class="showcase-thumb" style="background: linear-gradient(135deg, #FFF8E1, #FFECB3);">🌺</div>
+          <div class="showcase-body">
+            <h3>Rameshwaram</h3>
+            <p>Tamil Nadu</p>
+            <span class="badge badge-gold mt-2">Lord Shiva & Rama</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" style="background: var(--cream-dark);">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2>Why Choose Temple Darshan</h2>
+      </div>
+      <div class="grid-3 mt-4">
+        <div class="card card-body" style="text-align:center;">
+          <div class="feature-icon" style="margin: 0 auto;">🎟️</div>
+          <h3 style="font-size:1.2rem;">Instant QR Tickets</h3>
+          <p class="mt-2">Get a unique QR code ticket instantly. No printouts needed — just your phone.</p>
+        </div>
+        <div class="card card-body" style="text-align:center;">
+          <div class="feature-icon" style="margin: 0 auto;">📅</div>
+          <h3 style="font-size:1.2rem;">Flexible Scheduling</h3>
+          <p class="mt-2">Book up to 30 days in advance. Choose from multiple aarti and darshan slots.</p>
+        </div>
+        <div class="card card-body" style="text-align:center;">
+          <div class="feature-icon" style="margin: 0 auto;">🔒</div>
+          <h3 style="font-size:1.2rem;">Secure & Private</h3>
+          <p class="mt-2">Firebase Authentication keeps your data safe. We never share your information.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Begin Your Sacred Journey Today</h2>
+        <p>Join lakhs of devotees who skip the queue and embrace divine blessings</p>
+        <div class="btn-group">
+          <a href="./signup.html" class="btn btn-primary btn-lg">Create Free Account</a>
+          <a href="./login.html" class="btn btn-outline-gold btn-lg">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <h4>Temple Darshan</h4>
+      <p class="mt-2">Connecting devotees with sacred shrines across India</p>
+      <div class="om-decoration mt-3">ॐ</div>
+      <div class="footer-bottom">
+        <p>© 2025 Temple Darshan. Made with 🙏 for devotees across India.</p>
+        <p class="mt-1" style="font-size:0.75rem; opacity:0.5;">This is a demo project. Replace Firebase config with your own credentials.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile hamburger menu
+    document.getElementById("hamburger").addEventListener("click", () => {
+      document.getElementById("navMenu").classList.toggle("open");
+    });
+  </script>
+</body>
+</html>

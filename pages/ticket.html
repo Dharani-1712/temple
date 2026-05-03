@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Darshan Ticket — Temple Darshan</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- html2canvas for download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { background: var(--cream-dark); }
+
+    .page-hero {
+      background: linear-gradient(135deg, #1a3a2a 0%, #0d2418 100%);
+      padding: 2.5rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '🎟️';
+      position: absolute;
+      font-size: 18rem;
+      right: 2%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.05;
+    }
+    .page-hero h1 { color: var(--gold-light); position: relative; }
+    .page-hero p { color: rgba(255,255,255,0.6); position: relative; }
+
+    .ticket-wrapper {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ---- THE TICKET ---- */
+    .ticket-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(120, 60, 10, 0.25);
+      border: 1px solid rgba(201,168,76,0.2);
+      position: relative;
+    }
+
+    /* Ticket top band */
+    .ticket-top {
+      background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .ticket-top::before {
+      content: 'ॐ';
+      position: absolute;
+      font-size: 12rem;
+      color: rgba(255,255,255,0.05);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: serif;
+      pointer-events: none;
+    }
+    .ticket-temple-emoji {
+      font-size: 3.5rem;
+      position: relative;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .ticket-top h2 {
+      color: var(--gold-light);
+      font-size: 1.5rem;
+      position: relative;
+    }
+    .ticket-top p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.85rem;
+      position: relative;
+    }
+    .ticket-top .deity-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold-light);
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      margin-top: 8px;
+      position: relative;
+    }
+
+    /* Ticket perforations */
+    .ticket-perforation {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .perf-line {
+      flex: 1;
+      border-top: 2px dashed rgba(201,168,76,0.25);
+    }
+    .perf-circle {
+      width: 24px; height: 24px;
+      background: var(--cream-dark);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .perf-circle.left { margin-left: -12px; }
+    .perf-circle.right { margin-right: -12px; }
+
+    /* Ticket body */
+    .ticket-body { padding: 1.5rem; }
+
+    .ticket-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .ticket-info-item {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid rgba(201,168,76,0.15);
+    }
+    .ticket-info-item .ti-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .ticket-info-item .ti-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* QR section */
+    .qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--cream), rgba(201,168,76,0.08));
+      border-top: 1px solid rgba(201,168,76,0.2);
+      text-align: center;
+    }
+    #qrCode { margin: 0 auto 1rem; }
+    #qrCode img, #qrCode canvas {
+      border-radius: 10px;
+      border: 4px solid white;
+      box-shadow: 0 4px 16px rgba(120,60,10,0.15);
+    }
+    .qr-caption {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .booking-id-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--maroon);
+      letter-spacing: 0.1em;
+      margin-top: 8px;
+    }
+
+    /* Status badge */
+    .status-confirmed {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(39, 174, 96, 0.12);
+      color: #1e8449;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      background: #27ae60;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* Action buttons */
+    .ticket-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Spinner -->
+  <div class="spinner-overlay" id="spinnerOverlay">
+    <div class="spinner"></div>
+    <p>Loading ticket…</p>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="../index.html">
+      <div class="brand-icon">🛕</div>
+      Temple Darshan
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="./dashboard.html">Dashboard</a></li>
+      <li><a href="./booking.html">Book Again</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="container">
+      <h1>🎟️ Your Darshan Ticket</h1>
+      <p>Present this QR code at the temple entrance</p>
+    </div>
+  </div>
+
+  <!-- Ticket Container -->
+  <section style="padding: 2.5rem 1rem 4rem;">
+    <div class="ticket-wrapper" id="ticketContainer">
+      <!-- ---- THE TICKET ---- -->
+      <div id="ticketCard" class="ticket-card">
+        <!-- Top Band -->
+        <div class="ticket-top">
+          <span class="ticket-temple-emoji" id="ticketEmoji">🛕</span>
+          <h2 id="ticketTempleName">Temple Name</h2>
+          <p id="ticketTempleLocation">Location</p>
+          <div class="deity-badge" id="ticketDeity"></div>
+        </div>
+
+        <!-- Perforation -->
+        <div class="ticket-perforation">
+          <div class="perf-circle left"></div>
+          <div class="perf-line"></div>
+          <div class="perf-circle right"></div>
+        </div>
+
+        <!-- Body -->
+        <div class="ticket-body">
+          <div style="text-align:center; margin-bottom:1rem;">
+            <div class="status-confirmed">
+              <div class="status-dot"></div>
+              Booking Confirmed
+            </div>
+          </div>
+
+          <div class="ticket-info-grid">
+            <div class="ticket-info-item" style="grid-column:1/-1;">
+              <div class="ti-label">Devotee Name</div>
+              <div class="ti-value" id="ticketName">—</div>
+            </div>
+            <div class="ticket-info-item" style="grid-column:1/-1;">
+              <div class="ti-label">Visit Date</div>
+              <div class="ti-value" id="ticketDate">—</div>
+            </div>
+            <div class="ticket-info-item">
+              <div class="ti-label">Time Slot</div>
+              <div class="ti-value" id="ticketTime">—</div>
+            </div>
+            <div class="ticket-info-item">
+              <div class="ti-label">Devotees</div>
+              <div class="ti-value" id="ticketDevotees">—</div>
+            </div>
+            <div class="ticket-info-item">
+              <div class="ti-label">Email</div>
+              <div class="ti-value" style="font-size:0.78rem;" id="ticketEmail">—</div>
+            </div>
+            <div class="ticket-info-item">
+              <div class="ti-label">Booked At</div>
+              <div class="ti-value" style="font-size:0.75rem;" id="ticketBookedAt">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Perforation -->
+        <div class="ticket-perforation">
+          <div class="perf-circle left"></div>
+          <div class="perf-line"></div>
+          <div class="perf-circle right"></div>
+        </div>
+
+        <!-- QR Section -->
+        <div class="qr-section">
+          <div id="qrCode"></div>
+          <p class="qr-caption">Scan this QR code at the temple entrance</p>
+          <div class="booking-id-big" id="ticketBookingId">TD-XXXXXX</div>
+        </div>
+      </div>
+
+      <!-- Action buttons (outside ticket for download) -->
+      <div class="ticket-actions">
+        <button class="btn btn-primary btn-lg" id="downloadBtn">⬇️ Download Ticket</button>
+        <button class="btn btn-secondary" id="shareBtn">🔗 Share</button>
+        <a href="./booking.html" class="btn btn-outline-gold">+ New Booking</a>
+      </div>
+
+      <p style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-top:1rem;">
+        ✉️ A copy has been saved to your bookings dashboard.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="om-decoration">ॐ</div>
+      <p class="mt-2" style="font-size:0.85rem;">© 2025 Temple Darshan — Jai Shri Ram 🙏</p>
+    </div>
+  </footer>
+
+  <script type="module" src="../js/ticket.js"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Darshan — Temple Darshan</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    body { background: var(--cream-dark); }
+
+    .page-hero {
+      background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+      padding: 3rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '🛕';
+      position: absolute;
+      right: 5%;
+      bottom: -10%;
+      font-size: 12rem;
+      opacity: 0.07;
+    }
+    .page-hero h1 { color: var(--gold-light); font-size: 2rem; position: relative; }
+    .page-hero p { color: rgba(255,255,255,0.6); position: relative; margin-top: 6px; }
+
+    .booking-section {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-warm);
+      border: 1px solid rgba(201,168,76,0.15);
+      margin-bottom: 1.5rem;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .section-label .label-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(232,131,26,0.15), rgba(201,168,76,0.2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .section-label h3 { font-size: 1.2rem; margin: 0; }
+
+    .booking-summary {
+      background: linear-gradient(135deg, rgba(232,131,26,0.06), rgba(201,168,76,0.08));
+      border: 1.5px solid rgba(232,131,26,0.2);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 0.9rem;
+    }
+    .summary-row:not(:last-child) { border-bottom: 1px solid rgba(201,168,76,0.15); }
+    .summary-row .label { color: var(--text-muted); }
+    .summary-row .value { font-weight: 500; color: var(--text-main); }
+
+    .booking-main {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .booking-main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Spinner -->
+  <div class="spinner-overlay" id="spinnerOverlay">
+    <div class="spinner"></div>
+    <p>Verifying session…</p>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="../index.html">
+      <div class="brand-icon">🛕</div>
+      Temple Darshan
+    </a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="./dashboard.html">Dashboard</a></li>
+      <li><a href="./booking.html" class="active">Book Darshan</a></li>
+      <li><span id="userGreeting" style="font-size:0.85rem; color:var(--text-muted); padding:8px 12px;"></span></li>
+    </ul>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="container">
+      <h1>📅 Book Your Darshan</h1>
+      <p>Select a temple, choose your date & time slot, and receive your QR ticket instantly</p>
+    </div>
+  </div>
+
+  <div style="padding: 2rem 0 3rem;">
+    <div class="container">
+      <div class="booking-main">
+        <!-- Left: Booking Steps -->
+        <div>
+          <!-- Step 1: Choose Temple -->
+          <div class="booking-section">
+            <div class="section-label">
+              <div class="label-icon">🛕</div>
+              <h3>Step 1: Choose a Temple</h3>
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;" id="templeGrid">
+              <!-- Rendered by JS -->
+              <div style="display:flex; justify-content:center; padding:2rem; grid-column:1/-1;">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Date & Slot -->
+          <div class="booking-section" id="bookingFormSection" style="display:none;">
+            <div class="section-label">
+              <div class="label-icon">📅</div>
+              <h3>Step 2: Choose Date & Slot</h3>
+            </div>
+
+            <p style="font-size:0.88rem; margin-bottom:1rem;">Booking for: <strong id="selectedTempleName" style="color:var(--saffron);"></strong></p>
+
+            <div class="form-group">
+              <label for="visitDate">Visit Date</label>
+              <input type="date" id="visitDate" class="form-control" />
+            </div>
+
+            <div id="slotSection" style="display:none;">
+              <label style="font-size:0.85rem; font-weight:500; color:var(--text-main); display:block; margin-bottom:8px;">
+                Select Time Slot
+                <span style="font-size:0.75rem; color:var(--text-muted); font-weight:400;">(Strikethrough = Full)</span>
+              </label>
+              <div class="slot-grid" id="slotsContainer">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <form id="bookingForm">
+              <div class="form-group mt-3">
+                <label for="devotees">Number of Devotees (max 10)</label>
+                <input type="number" id="devotees" class="form-control" min="1" max="10" value="1" placeholder="1" />
+              </div>
+              <button type="submit" class="btn btn-primary btn-full btn-lg mt-3">
+                🙏 Confirm Booking & Get Ticket
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right: Sidebar Info -->
+        <div>
+          <div class="booking-section">
+            <h3 style="font-size:1.1rem; margin-bottom:1rem;">Booking Guidelines</h3>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+              <li style="display:flex; gap:10px; font-size:0.85rem;">
+                <span style="color:var(--saffron);">✓</span>
+                Carry a printed or digital copy of your QR ticket
+              </li>
+              <li style="display:flex; gap:10px; font-size:0.85rem;">
+                <span style="color:var(--saffron);">✓</span>
+                Arrive at least 15 minutes before your slot time
+              </li>
+              <li style="display:flex; gap:10px; font-size:0.85rem;">
+                <span style="color:var(--saffron);">✓</span>
+                Wear traditional or modest attire for darshan
+              </li>
+              <li style="display:flex; gap:10px; font-size:0.85rem;">
+                <span style="color:var(--saffron);">✓</span>
+                Mobile phones may not be allowed inside some sanctums
+              </li>
+              <li style="display:flex; gap:10px; font-size:0.85rem;">
+                <span style="color:var(--saffron);">✓</span>
+                Cancellations must be made 24 hours in advance
+              </li>
+            </ul>
+          </div>
+
+          <div class="booking-section">
+            <h3 style="font-size:1.1rem; margin-bottom:1rem;">Need Help?</h3>
+            <p style="font-size:0.85rem;">Contact our support team for any assistance with your booking.</p>
+            <a href="mailto:support@templedarshan.in" class="btn btn-secondary btn-sm mt-2" style="display:inline-flex;">
+              📧 Email Support
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="om-decoration">ॐ</div>
+      <p class="mt-2" style="font-size:0.85rem;">© 2025 Temple Darshan</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("hamburger").addEventListener("click", () => {
+      document.getElementById("navMenu").classList.toggle("open");
+    });
+  </script>
+  <script type="module" src="../js/booking.js"></script>
+</body>
+</html>
