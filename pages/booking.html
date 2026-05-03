@@ -328,52 +328,98 @@
   <div class="modal-overlay" id="paymentModal">
     <div class="payment-modal">
       <div class="modal-header">
-        <h2>🔒 Secure Payment</h2>
+        <div>
+          <h2>💳 Pre-Booking Payment</h2>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.75rem;margin:2px 0 0;">Pay just &#8377;1 to reserve your slot</p>
+        </div>
         <button class="modal-close" id="closePayModal" aria-label="Close">✕</button>
       </div>
 
-      <!-- Main content -->
-      <div id="payModalContent">
+      <!-- Step 1: Summary & Choose App -->
+      <div id="stepChoose">
         <div class="modal-body">
-          <!-- Razorpay notice -->
-          <div style="display:flex;align-items:center;gap:8px;background:rgba(232,131,26,0.07);border:1px solid rgba(232,131,26,0.2);border-radius:10px;padding:10px 14px;margin-bottom:1.2rem;">
-            <span style="font-size:1.3rem;">🔒</span>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">100% secure payment powered by <strong style="color:#0d5ef5;">Razorpay</strong>. Supports UPI, Cards, Net Banking &amp; Wallets.</p>
+
+          <!-- Info Banner -->
+          <div style="background:linear-gradient(135deg,rgba(232,131,26,0.1),rgba(201,168,76,0.12));border:1.5px solid rgba(232,131,26,0.25);border-radius:12px;padding:12px 14px;margin-bottom:1.2rem;">
+            <p style="font-size:0.82rem;color:var(--text-main);margin:0;line-height:1.6;">
+              💡 <strong>How it works:</strong><br>
+              ✅ Pay <strong>₹1</strong> now to lock your slot (pre-booking fee)<br>
+              💰 Pay the <strong>full amount</strong> by your visit date<br>
+              ⚠️ Booking auto-cancels if full payment not made
+            </p>
           </div>
 
           <!-- Order Summary -->
           <div class="pay-summary">
             <div class="row"><span class="lbl">Temple</span><span class="val" id="payTempleName">—</span></div>
             <div class="row"><span class="lbl">Date</span><span class="val" id="payDate">—</span></div>
-            <div class="row"><span class="lbl">Time Slot</span><span class="val" id="paySlot">—</span></div>
+            <div class="row"><span class="lbl">Slot</span><span class="val" id="paySlot">—</span></div>
             <div class="row"><span class="lbl">Devotees</span><span class="val" id="payDevotees">—</span></div>
-            <div class="row total"><span class="lbl">Total Amount</span><span class="val" id="payAmount">—</span></div>
+            <div class="row"><span class="lbl">Full Amount Due</span><span class="val" id="payFullAmount" style="color:var(--saffron);">&#8377;—</span></div>
+            <div class="row total"><span class="lbl">Pay Now (Pre-booking)</span><span class="val" style="color:#16a34a;font-size:1.1rem;">&#8377;1</span></div>
           </div>
 
-          <!-- Razorpay Button -->
-          <button class="pay-now-btn" id="payNowBtn" onclick="openRazorpay()">
-            <img src="https://razorpay.com/favicon.ico" style="width:18px;height:18px;border-radius:4px;" alt="" />
-            Pay with Razorpay
-          </button>
+          <!-- Choose UPI App -->
+          <p style="font-size:0.82rem;font-weight:600;color:var(--text-main);margin-bottom:10px;">Choose payment app:</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem;">
+            <button class="upi-app-btn" id="btnGpay" onclick="chooseApp('gpay')">
+              <span style="font-size:2rem;">&#128309;</span>
+              <span style="font-size:0.75rem;font-weight:700;">GPay</span>
+            </button>
+            <button class="upi-app-btn" id="btnPhonepe" onclick="chooseApp('phonepe')">
+              <span style="font-size:2rem;">&#128995;</span>
+              <span style="font-size:0.75rem;font-weight:700;">PhonePe</span>
+            </button>
+            <button class="upi-app-btn" id="btnPaytm" onclick="chooseApp('paytm')">
+              <span style="font-size:2rem;">&#128055;</span>
+              <span style="font-size:0.75rem;font-weight:700;">Paytm</span>
+            </button>
+          </div>
 
-          <p style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:10px;">
-            🔐 256-bit SSL encrypted &nbsp;|&nbsp; All payment methods accepted
-          </p>
+          <!-- UPI ID input -->
+          <div class="form-group" style="margin-bottom:0;">
+            <label style="font-size:0.82rem;">Or enter receiver UPI ID</label>
+            <input type="text" id="upiIdInput" class="form-control" placeholder="e.g. dharani@ybl" />
+            <p style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Your payment will go to this UPI ID</p>
+          </div>
         </div>
       </div>
 
-      <!-- Processing -->
-      <div class="processing-overlay" id="processingOverlay">
-        <div class="process-spinner"></div>
-        <p style="font-weight:600; color:var(--text-main);">Processing Payment…</p>
-        <p style="font-size:0.82rem; color:var(--text-muted);">Please do not close this window</p>
+      <!-- Step 2: QR / Pay screen -->
+      <div id="stepPay" style="display:none;">
+        <div class="modal-body">
+          <div style="text-align:center;">
+            <p style="font-weight:700;font-size:1rem;margin-bottom:4px;" id="payAppTitle">Pay via GPay</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Send exactly <strong style="color:#16a34a;">₹1</strong> to complete pre-booking</p>
+
+            <!-- QR Code placeholder -->
+            <div id="upiQr" style="width:160px;height:160px;background:linear-gradient(135deg,rgba(232,131,26,0.08),rgba(201,168,76,0.12));border:2px dashed rgba(201,168,76,0.4);border-radius:14px;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">
+              📱
+            </div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Or click the button below to open app directly</p>
+            <a id="upiDeepLink" href="#" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--maroon),var(--saffron));color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;font-size:0.88rem;text-decoration:none;margin-bottom:1rem;" target="_blank">
+              💳 Open in App &amp; Pay &#8377;1
+            </a>
+
+            <!-- UPI ID display -->
+            <div style="background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2);border-radius:10px;padding:10px 14px;margin-bottom:1rem;">
+              <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">Paying to UPI ID</p>
+              <p style="font-weight:700;color:var(--text-main);font-size:0.95rem;margin:2px 0 0;" id="displayUpiId">—</p>
+            </div>
+
+            <button onclick="confirmPaid()" class="pay-now-btn" style="background:linear-gradient(135deg,#16a34a,#15803d);">
+              ✅ I Have Paid &#8377;1 — Generate My Ticket
+            </button>
+            <button onclick="goBackStep()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;margin-top:8px;display:block;width:100%;">&#8592; Go back</button>
+          </div>
+        </div>
       </div>
 
       <!-- Success -->
       <div class="success-check" id="successOverlay">
         <div class="check-circle">✓</div>
-        <p style="font-weight:700; font-size:1.1rem; color:var(--text-main);">Payment Successful!</p>
-        <p style="font-size:0.85rem; color:var(--text-muted);">Generating your darshan ticket…</p>
+        <p style="font-weight:700; font-size:1.1rem; color:var(--text-main);">Pre-booking Confirmed!</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Generating your temporary ticket…</p>
       </div>
     </div>
   </div>
@@ -506,8 +552,120 @@
     </div>
   </footer>
 
-  <!-- Razorpay SDK -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById("hamburger").addEventListener("click", () => {
+      document.getElementById("navMenu").classList.toggle("open");
+    });
+
+    // =============================================
+    // 🔑 YOUR UPI ID — Money will come to this
+    // Change this to your own UPI ID
+    // =============================================
+    const YOUR_UPI_ID   = 'dharani@ybl';      // ← CHANGE THIS to your UPI ID
+    const YOUR_NAME     = 'Temple Darshan';   // Your name shown in payment app
+    const PRICE_PER_DEVOTEE = 51;             // ₹51 per devotee (full amount)
+    const PRE_BOOKING_FEE   = 1;             // ₹1 pre-booking fee
+
+    let pendingBooking  = null;
+    let chosenApp       = null;
+
+    // Called from booking.js
+    window.openPaymentModal = function(booking) {
+      pendingBooking = booking;
+      const devotees  = booking.devotees;
+      const full      = devotees * PRICE_PER_DEVOTEE;
+
+      document.getElementById('payTempleName').textContent  = booking.templeName;
+      document.getElementById('payDate').textContent        = new Date(booking.date).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+      document.getElementById('paySlot').textContent        = booking.slot.time + ' – ' + booking.slot.label;
+      document.getElementById('payDevotees').textContent    = devotees + (devotees > 1 ? ' Persons' : ' Person');
+      document.getElementById('payFullAmount').textContent  = '₹' + full.toLocaleString('en-IN');
+
+      // Reset to step 1
+      document.getElementById('stepChoose').style.display = 'block';
+      document.getElementById('stepPay').style.display    = 'none';
+      document.getElementById('successOverlay').classList.remove('active');
+      document.getElementById('upiIdInput').value = YOUR_UPI_ID;
+      chosenApp = null;
+      document.querySelectorAll('.upi-app-btn').forEach(b => b.classList.remove('selected'));
+
+      document.getElementById('paymentModal').classList.add('active');
+    };
+
+    // Close only cancels booking
+    document.getElementById('closePayModal').addEventListener('click', () => {
+      pendingBooking = null;
+      document.getElementById('paymentModal').classList.remove('active');
+    });
+
+    // Prevent backdrop close
+    document.getElementById('paymentModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('paymentModal')) {
+        pendingBooking = null;
+        document.getElementById('paymentModal').classList.remove('active');
+      }
+    });
+
+    function chooseApp(app) {
+      chosenApp = app;
+      document.querySelectorAll('.upi-app-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('btn' + app.charAt(0).toUpperCase() + app.slice(1)).classList.add('selected');
+
+      const upiId   = document.getElementById('upiIdInput').value.trim() || YOUR_UPI_ID;
+      const txnNote = encodeURIComponent('Temple Darshan Pre-Booking');
+      const name    = encodeURIComponent(YOUR_NAME);
+
+      // Standard UPI deep link — works for GPay, PhonePe, Paytm
+      const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${name}&am=${PRE_BOOKING_FEE}&cu=INR&tn=${txnNote}`;
+
+      const appNames = { gpay: '🔵 GPay', phonepe: '🟣 PhonePe', paytm: '🔷 Paytm' };
+
+      document.getElementById('payAppTitle').textContent  = 'Pay via ' + (app === 'gpay' ? 'GPay' : app === 'phonepe' ? 'PhonePe' : 'Paytm');
+      document.getElementById('displayUpiId').textContent = upiId;
+      document.getElementById('upiDeepLink').href         = upiLink;
+      document.getElementById('upiDeepLink').textContent  = (appNames[app] || '💳') + ' Open in App & Pay ₹1';
+
+      // Show QR SVG using Google Chart API
+      const qrUrl = `https://chart.googleapis.com/chart?chs=160x160&cht=qr&chl=${encodeURIComponent(upiLink)}&choe=UTF-8`;
+      document.getElementById('upiQr').innerHTML = `<img src="${qrUrl}" width="160" height="160" style="border-radius:10px;" alt="UPI QR Code" />`;
+
+      // Move to step 2
+      document.getElementById('stepChoose').style.display = 'none';
+      document.getElementById('stepPay').style.display    = 'block';
+    }
+
+    function goBackStep() {
+      document.getElementById('stepChoose').style.display = 'block';
+      document.getElementById('stepPay').style.display    = 'none';
+    }
+
+    function confirmPaid() {
+      if (!pendingBooking) return;
+
+      // Enrich booking with payment info
+      pendingBooking.paymentStatus    = 'pre-booked';          // status
+      pendingBooking.prePaid          = PRE_BOOKING_FEE;       // ₹1 paid
+      pendingBooking.fullAmountDue    = pendingBooking.devotees * PRICE_PER_DEVOTEE;
+      pendingBooking.paymentDeadline  = pendingBooking.date;   // must pay by visit date
+      pendingBooking.upiId            = document.getElementById('upiIdInput').value.trim() || YOUR_UPI_ID;
+
+      // Show success
+      document.getElementById('stepPay').style.display = 'none';
+      document.getElementById('successOverlay').classList.add('active');
+
+      // Save ONLY after user confirms payment
+      setTimeout(() => {
+        const existing = JSON.parse(localStorage.getItem('templeBookings') || '[]');
+        existing.push(pendingBooking);
+        localStorage.setItem('templeBookings', JSON.stringify(existing));
+        localStorage.setItem('currentBooking', JSON.stringify(pendingBooking));
+        window.location.href = './ticket.html';
+      }, 1800);
+    }
+  </script>
+  <script type="module" src="../js/booking.js"></script>
+</body>
+</html>
 
   <script>
     document.getElementById("hamburger").addEventListener("click", () => {

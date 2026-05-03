@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Darshan Ticket — Temple Darshan</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <!-- QR Code Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- html2canvas for download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body { background: var(--cream-dark); }
@@ -29,7 +27,7 @@
       opacity: 0.05;
     }
     .page-hero h1 { color: var(--gold-light); position: relative; }
-    .page-hero p { color: rgba(255,255,255,0.6); position: relative; }
+    .page-hero p  { color: rgba(255,255,255,0.6); position: relative; }
 
     .ticket-wrapper {
       max-width: 520px;
@@ -59,28 +57,14 @@
       position: absolute;
       font-size: 12rem;
       color: rgba(255,255,255,0.05);
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       font-family: serif;
       pointer-events: none;
     }
-    .ticket-temple-emoji {
-      font-size: 3.5rem;
-      position: relative;
-      margin-bottom: 8px;
-      display: block;
-    }
-    .ticket-top h2 {
-      color: var(--gold-light);
-      font-size: 1.5rem;
-      position: relative;
-    }
-    .ticket-top p {
-      color: rgba(255,255,255,0.65);
-      font-size: 0.85rem;
-      position: relative;
-    }
+    .ticket-temple-emoji { font-size: 3.5rem; position: relative; margin-bottom: 8px; display: block; }
+    .ticket-top h2    { color: var(--gold-light); font-size: 1.5rem; position: relative; }
+    .ticket-top p     { color: rgba(255,255,255,0.65); font-size: 0.85rem; position: relative; }
     .ticket-top .deity-badge {
       display: inline-block;
       background: rgba(255,255,255,0.1);
@@ -94,27 +78,14 @@
     }
 
     /* Ticket perforations */
-    .ticket-perforation {
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-    .perf-line {
-      flex: 1;
-      border-top: 2px dashed rgba(201,168,76,0.25);
-    }
-    .perf-circle {
-      width: 24px; height: 24px;
-      background: var(--cream-dark);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .perf-circle.left { margin-left: -12px; }
+    .ticket-perforation { display: flex; align-items: center; position: relative; }
+    .perf-line  { flex: 1; border-top: 2px dashed rgba(201,168,76,0.25); }
+    .perf-circle { width: 24px; height: 24px; background: var(--cream-dark); border-radius: 50%; flex-shrink: 0; }
+    .perf-circle.left  { margin-left: -12px; }
     .perf-circle.right { margin-right: -12px; }
 
     /* Ticket body */
     .ticket-body { padding: 1.5rem; }
-
     .ticket-info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -127,18 +98,8 @@
       padding: 12px;
       border: 1px solid rgba(201,168,76,0.15);
     }
-    .ticket-info-item .ti-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .ticket-info-item .ti-value {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
+    .ticket-info-item .ti-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 4px; }
+    .ticket-info-item .ti-value { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
 
     /* QR section */
     .qr-section {
@@ -156,12 +117,8 @@
       border: 4px solid white;
       box-shadow: 0 4px 16px rgba(120,60,10,0.15);
     }
-    .qr-caption {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
+    .qr-caption    { font-size: 0.8rem; color: var(--text-muted); }
     .booking-id-big {
-      font-family: 'Cormorant Garamond', serif;
       font-size: 1.3rem;
       font-weight: 600;
       color: var(--maroon);
@@ -169,28 +126,92 @@
       margin-top: 8px;
     }
 
-    /* Status badge */
-    .status-confirmed {
+    /* Status badges */
+    .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(39, 174, 96, 0.12);
-      color: #1e8449;
       padding: 6px 16px;
       border-radius: 100px;
       font-size: 0.8rem;
       font-weight: 600;
       margin-bottom: 1rem;
     }
+    .status-confirmed { background: rgba(39,174,96,0.12); color: #1e8449; }
+    .status-pending   { background: rgba(234,179,8,0.15);  color: #854d0e; }
+    .status-cancelled { background: rgba(220,38,38,0.12);  color: #991b1b; }
     .status-dot {
       width: 8px; height: 8px;
-      background: #27ae60;
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
+    .dot-green  { background: #27ae60; }
+    .dot-orange { background: #d97706; }
+    .dot-red    { background: #dc2626; }
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.5; transform:scale(0.8); }
+    }
+
+    /* Watermark overlay for temp ticket */
+    .temp-watermark {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-35deg);
+    }
+    .temp-watermark span {
+      font-size: 3rem;
+      font-weight: 900;
+      color: rgba(220,38,38,0.12);
+      letter-spacing: 0.15em;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    /* Blurred QR for temp */
+    .qr-blurred { filter: blur(6px); pointer-events: none; user-select: none; }
+
+    /* Pay full amount banner */
+    .pay-full-banner {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #f59e0b;
+      border-radius: 14px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.2rem 0 0;
+      text-align: center;
+    }
+    .pay-full-banner h3 { color: #92400e; font-size: 1rem; margin-bottom: 6px; }
+    .pay-full-banner p  { font-size: 0.82rem; color: #78350f; margin-bottom: 0.8rem; }
+    .pay-full-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .pay-full-btn:hover { opacity: 0.9; }
+
+    /* Cancelled banner */
+    .cancelled-banner {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      border: 2px solid #ef4444;
+      border-radius: 14px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.2rem 0 0;
+      text-align: center;
     }
 
     /* Action buttons */
@@ -201,6 +222,69 @@
       margin-top: 1.5rem;
       justify-content: center;
     }
+
+    /* Full Payment Modal */
+    .fullpay-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20,10,5,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .fullpay-modal-overlay.active { display: flex; }
+    .fullpay-modal {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: modalIn 0.35s cubic-bezier(.22,.68,0,1.2);
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.85) translateY(30px); opacity: 0; }
+      to   { transform: scale(1)    translateY(0);    opacity: 1; }
+    }
+    .fullpay-header {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .fullpay-header h2 { color: #fff; font-size: 1.1rem; margin: 0; }
+    .fullpay-close {
+      background: rgba(255,255,255,0.2);
+      border: none; color: #fff;
+      width: 30px; height: 30px;
+      border-radius: 50%; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fullpay-body { padding: 1.4rem; }
+    .fullpay-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+      gap: 0.8rem;
+    }
+    .fullpay-success.active { display: flex; }
+    .fullpay-check {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg,#d97706,#b45309);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: #fff;
+      animation: popIn 0.5s cubic-bezier(.22,.68,0,1.4);
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -210,8 +294,60 @@
     <p>Loading ticket…</p>
   </div>
 
-  <!-- Toast Container -->
+  <!-- Toast -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Full Payment Modal -->
+  <div class="fullpay-modal-overlay" id="fullPayModal">
+    <div class="fullpay-modal">
+      <div class="fullpay-header">
+        <h2>💰 Pay Full Amount</h2>
+        <button class="fullpay-close" id="closeFullPay">✕</button>
+      </div>
+
+      <div id="fullPayContent">
+        <div class="fullpay-body">
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">
+            Choose your payment app to pay <strong id="fullAmountDisplay" style="color:#d97706;"></strong> and activate your ticket.
+          </p>
+
+          <!-- UPI Apps -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem;">
+            <button class="upi-app-btn" onclick="payFull('gpay')">
+              <span style="font-size:1.8rem;">🔵</span>
+              <span style="font-size:0.75rem;font-weight:700;">GPay</span>
+            </button>
+            <button class="upi-app-btn" onclick="payFull('phonepe')">
+              <span style="font-size:1.8rem;">🟣</span>
+              <span style="font-size:0.75rem;font-weight:700;">PhonePe</span>
+            </button>
+            <button class="upi-app-btn" onclick="payFull('paytm')">
+              <span style="font-size:1.8rem;">🔷</span>
+              <span style="font-size:0.75rem;font-weight:700;">Paytm</span>
+            </button>
+          </div>
+
+          <!-- QR + deep link shown after choosing -->
+          <div id="fullPayQrSection" style="display:none;text-align:center;margin-top:0.5rem;">
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">Scan QR or open app to pay:</p>
+            <div id="fullPayQr" style="margin:0 auto 10px;"></div>
+            <a id="fullPayDeepLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;font-size:0.88rem;text-decoration:none;margin-bottom:1rem;">
+              Open App & Pay
+            </a>
+            <button onclick="confirmFullPaid()" style="width:100%;padding:12px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-top:4px;">
+              ✅ I Have Paid — Activate Ticket
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fullpay-success" id="fullPaySuccess">
+        <div class="fullpay-check">✓</div>
+        <p style="font-weight:700;font-size:1.1rem;color:var(--text-main);">Full Payment Done!</p>
+        <p style="font-size:0.85rem;color:var(--text-muted);">Activating your ticket…</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Navbar -->
   <nav class="navbar">
@@ -228,16 +364,23 @@
   <!-- Page Hero -->
   <div class="page-hero">
     <div class="container">
-      <h1>🎟️ Your Darshan Ticket</h1>
-      <p>Present this QR code at the temple entrance</p>
+      <h1 id="heroTitle">🎟️ Your Darshan Ticket</h1>
+      <p id="heroSubtitle">Present this QR code at the temple entrance</p>
     </div>
   </div>
 
   <!-- Ticket Container -->
   <section style="padding: 2.5rem 1rem 4rem;">
     <div class="ticket-wrapper" id="ticketContainer">
-      <!-- ---- THE TICKET ---- -->
+
+      <!-- THE TICKET -->
       <div id="ticketCard" class="ticket-card">
+
+        <!-- Watermark (shown only for temp) -->
+        <div class="temp-watermark" id="tempWatermark" style="display:none;">
+          <span>TEMPORARY</span>
+        </div>
+
         <!-- Top Band -->
         <div class="ticket-top">
           <span class="ticket-temple-emoji" id="ticketEmoji">🛕</span>
@@ -256,10 +399,8 @@
         <!-- Body -->
         <div class="ticket-body">
           <div style="text-align:center; margin-bottom:1rem;">
-            <div class="status-confirmed">
-              <div class="status-dot"></div>
-              Booking Confirmed
-            </div>
+            <!-- Status badge injected by JS -->
+            <div id="statusBadge"></div>
           </div>
 
           <div class="ticket-info-grid">
@@ -287,6 +428,11 @@
               <div class="ti-label">Booked At</div>
               <div class="ti-value" style="font-size:0.75rem;" id="ticketBookedAt">—</div>
             </div>
+            <!-- Payment info row -->
+            <div class="ticket-info-item" style="grid-column:1/-1;" id="paymentInfoRow">
+              <div class="ti-label">Payment</div>
+              <div class="ti-value" id="ticketPayInfo">—</div>
+            </div>
           </div>
         </div>
 
@@ -300,13 +446,33 @@
         <!-- QR Section -->
         <div class="qr-section">
           <div id="qrCode"></div>
-          <p class="qr-caption">Scan this QR code at the temple entrance</p>
+          <p class="qr-caption" id="qrCaption">Scan this QR code at the temple entrance</p>
           <div class="booking-id-big" id="ticketBookingId">TD-XXXXXX</div>
         </div>
       </div>
 
-      <!-- Action buttons (outside ticket for download) -->
-      <div class="ticket-actions">
+      <!-- Pay Full Banner (shown for pre-booked) -->
+      <div class="pay-full-banner" id="payFullBanner" style="display:none;">
+        <h3>⚠️ Action Required: Pay Full Amount</h3>
+        <p>
+          Your QR code is <strong>locked</strong> until full payment is made.<br>
+          Full amount due: <strong id="fullAmountBanner" style="color:#92400e;"></strong><br>
+          <span style="color:#dc2626;font-size:0.8rem;">⏰ Pay before your visit date or booking will be auto-cancelled</span>
+        </p>
+        <button class="pay-full-btn" onclick="openFullPayModal()">
+          💳 Pay Full Amount Now
+        </button>
+      </div>
+
+      <!-- Cancelled Banner -->
+      <div class="cancelled-banner" id="cancelledBanner" style="display:none;">
+        <h3 style="color:#991b1b;margin-bottom:6px;">❌ Booking Cancelled</h3>
+        <p style="font-size:0.85rem;color:#7f1d1d;margin:0;">This booking was automatically cancelled because the full payment was not made before the visit date.</p>
+        <a href="./booking.html" class="btn btn-primary mt-3" style="display:inline-flex;margin-top:12px;">📅 Book Again</a>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="ticket-actions" id="ticketActions">
         <button class="btn btn-primary btn-lg" id="downloadBtn">⬇️ Download Ticket</button>
         <button class="btn btn-secondary" id="shareBtn">🔗 Share</button>
         <a href="./booking.html" class="btn btn-outline-gold">+ New Booking</a>
@@ -327,5 +493,74 @@
   </footer>
 
   <script type="module" src="../js/ticket.js"></script>
+
+  <script>
+    // ---- Full Payment Modal ----
+    let currentBooking = null;
+
+    window.initFullPayModal = function(booking) {
+      currentBooking = booking;
+    };
+
+    function openFullPayModal() {
+      if (!currentBooking) return;
+      const amt = currentBooking.fullAmountDue || (currentBooking.devotees * 51);
+      document.getElementById('fullAmountDisplay').textContent = '₹' + amt.toLocaleString('en-IN');
+      document.getElementById('fullPayQrSection').style.display = 'none';
+      document.getElementById('fullPayContent').style.display = 'block';
+      document.getElementById('fullPaySuccess').classList.remove('active');
+      document.querySelectorAll('#fullPayModal .upi-app-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('fullPayModal').classList.add('active');
+    }
+
+    document.getElementById('closeFullPay').addEventListener('click', () => {
+      document.getElementById('fullPayModal').classList.remove('active');
+    });
+
+    function payFull(app) {
+      if (!currentBooking) return;
+      document.querySelectorAll('#fullPayModal .upi-app-btn').forEach(b => b.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+
+      const upiId   = currentBooking.upiId || 'dharani@ybl';
+      const amt     = currentBooking.fullAmountDue || (currentBooking.devotees * 51);
+      const note    = encodeURIComponent('Temple Darshan Full Payment - ' + currentBooking.bookingId);
+      const name    = encodeURIComponent('Temple Darshan');
+      const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${name}&am=${amt}&cu=INR&tn=${note}`;
+
+      const appNames = { gpay: '🔵 GPay', phonepe: '🟣 PhonePe', paytm: '🔷 Paytm' };
+      document.getElementById('fullPayDeepLink').href        = upiLink;
+      document.getElementById('fullPayDeepLink').textContent = (appNames[app] || '💳') + ' Open & Pay ₹' + amt;
+
+      const qrUrl = `https://chart.googleapis.com/chart?chs=140x140&cht=qr&chl=${encodeURIComponent(upiLink)}&choe=UTF-8`;
+      document.getElementById('fullPayQr').innerHTML = `<img src="${qrUrl}" width="140" height="140" style="border-radius:10px;" />`;
+
+      document.getElementById('fullPayQrSection').style.display = 'block';
+    }
+
+    function confirmFullPaid() {
+      if (!currentBooking) return;
+
+      // Mark as fully paid in localStorage
+      currentBooking.paymentStatus = 'confirmed';
+      currentBooking.status        = 'confirmed';
+
+      // Update in bookings array
+      const all = JSON.parse(localStorage.getItem('templeBookings') || '[]');
+      const idx = all.findIndex(b => b.bookingId === currentBooking.bookingId);
+      if (idx !== -1) all[idx] = currentBooking;
+      localStorage.setItem('templeBookings', JSON.stringify(all));
+      localStorage.setItem('currentBooking', JSON.stringify(currentBooking));
+
+      // Show success then reload page
+      document.getElementById('fullPayContent').style.display = 'none';
+      document.getElementById('fullPaySuccess').classList.add('active');
+
+      setTimeout(() => {
+        document.getElementById('fullPayModal').classList.remove('active');
+        window.location.reload();
+      }, 2000);
+    }
+  </script>
 </body>
 </html>
